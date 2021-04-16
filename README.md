@@ -9,5 +9,6 @@ bluetooth => flutter_blue plugin scan 사용
 bluetoothPlugin(state Detecting) => 자체 plugin 만들어서 블루투스 상태변화 감지
 
 # todo
-1. blutooth 찾기 중지 시, 블루투스 on/off check
-2. blutooth enable event로 받아서 앱에서 설정할 수 있게 변경해야됨
+1. bluetooth 찾기 중지 시, 블루투스 on/off check
+2. bluetooth enable event로 받아서 앱에서 설정할 수 있게 변경해야됨
+3. bluetooth device connected
