@@ -2,15 +2,10 @@
 
 testproject_with_qr_ble
 
-## Getting Started
+qr scan => qr_scanner plugin 사용 및 변경
 
-This project is a starting point for a Flutter application.
+bluetooth => flutter_blue plugin scan 사용
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# todo
+1. blutooth 찾기 중지 시, 블루투스 on/off check
+2. blutooth enable event로 받아서 앱에서 설정할 수 있게 변경해야됨
