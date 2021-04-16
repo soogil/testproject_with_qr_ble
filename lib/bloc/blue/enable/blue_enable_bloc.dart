@@ -14,7 +14,6 @@ class BlueEnableBloc extends Bloc<BlueEnableBlocEvent, BlueEnableBlocState> {
     if (event is UseBluetoothEvent) {
       await _blueService.useBluetoothEnable;
       final bool isEnable = await _blueService.isEnabledBluetooth;
-      print('BlueEnableBlocState $isEnable');
       yield UseBluetoothState(isEnable);
     }
   }
