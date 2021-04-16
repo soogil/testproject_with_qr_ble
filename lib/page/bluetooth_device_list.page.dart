@@ -1,9 +1,14 @@
+import 'package:bluetooth_plugin/bluetooth_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testproject_with_qr_ble/bloc/ble/blue_bloc.dart';
-import 'package:testproject_with_qr_ble/bloc/ble/blue_event.dart';
-import 'package:testproject_with_qr_ble/bloc/ble/blue_state.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/blue_bloc.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/blue_event.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/blue_state.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_bloc.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_state.dart';
+import 'package:testproject_with_qr_ble/bloc/qr/qr_bloc.dart';
 import 'package:testproject_with_qr_ble/model/BleModel.dart';
+import 'package:testproject_with_qr_ble/page/qr_screen.page.dart';
 
 
 class BluetoothDeviceListPage extends StatelessWidget {
@@ -11,20 +16,36 @@ class BluetoothDeviceListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
+      appBar: _appbar(context),
       body: _buildBody(context),
     );
   }
 
-  Widget _appbar() => AppBar(
+  Widget _appbar(BuildContext context) => AppBar(
     title: Text(
       'AppBar',
     ),
     actions: [
+      _navigateQrView(context),
       _circleProgress(),
       _findBleButton(),
     ],
   );
+
+  Widget _navigateQrView(BuildContext context) {
+    return TextButton(
+        onPressed: () =>
+            Navigator.push(context, MaterialPageRoute(builder: (_) =>
+                BlocProvider(create: (_) => QRBloc(), child: QRScreenPage(),)
+            )),
+        child: Text('QR스캔',
+          style: TextStyle(
+              fontSize: 15,
+              color: Colors.white
+          ),
+        )
+    );
+  }
 
   Widget _circleProgress() {
     return BlocBuilder<BlueBloc, BlueBlocState>(builder: (context, state) {
@@ -61,18 +82,40 @@ class BluetoothDeviceListPage extends StatelessWidget {
   Widget _buildBody(BuildContext context) {
     return BlocBuilder<BlueBloc, BlueBlocState>(
         builder: (context, state) {
-          print('_buildBody $state');
-          return _buildBleList(state.deviceList);
+          return _buildBleList(context, state.deviceList);
         }
     );
   }
 
-  Widget _buildBleList(List<BluetoothModel> bleList) {
-    return ListView.builder(
-      itemCount: bleList.length,
-        itemBuilder: (context, index) {
-        return _deviceListItem(bleList[index]);
-        },
+  Widget _buildBleList(BuildContext context, List<BluetoothModel> bleList) {
+    return Column(
+      children: [
+        // _bluetoothEnable(context),
+        Expanded(
+          child: ListView.builder(
+            itemCount: bleList.length,
+              itemBuilder: (context, index) => _deviceListItem(bleList[index])
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _bluetoothEnable(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Text('bluetoothEnable'),
+        BlocBuilder<BlueEnableBloc, BlueEnableBlocState>(builder: (context, state) {
+          print('BlueEnableBloc ${state.isBluetoothEnable}');
+            return Switch(value: state.isBluetoothEnable, onChanged: (toggle) =>
+                BluetoothPlugin.connectionStatus().listen((event) {
+                  print('connectionStatus $event');
+                })
+                // BlocProvider.of<BlueEnableBloc>(context).add(UseBluetoothEvent())
+            );}
+        ),
+      ],
     );
   }
 

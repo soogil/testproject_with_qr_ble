@@ -1,13 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testproject_with_qr_ble/bloc/ble/blue_event.dart';
-import 'package:testproject_with_qr_ble/bloc/ble/blue_state.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/blue_event.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/blue_state.dart';
 import 'package:testproject_with_qr_ble/model/BleModel.dart';
 import 'package:testproject_with_qr_ble/repository/blue_repository.dart';
 
 class BlueBloc extends Bloc<BlueBlocEvent, BlueBlocState> {
   BlueBloc() : super(InitBleState());
 
-  final BleRepository _bleRepository = BleRepository();
+  final BluetoothRepository _bluetoothRepository = BluetoothRepository();
 
   @override
   Stream<BlueBlocState> mapEventToState(BlueBlocEvent event) async* {
@@ -24,17 +24,19 @@ class BlueBloc extends Bloc<BlueBlocEvent, BlueBlocState> {
         scanState = BlueScanState.start;
         _bluetoothScanStart();
       }
+      print('StartBlueEvent $scanState');
       yield InitBleState(deviceList: state.deviceList, state: scanState);
     } else if (event is FindDeviceEvent) {
       state.deviceList.add(event.bleModel);
       print('FindDeviceEvent ${state.deviceList.length}');
-      yield InitBleState(deviceList: state.deviceList, state: BlueScanState.start);
+    } else if (event is BluetoothEnableEvent) {
+      // _bluetoothEnable();
     }
   }
   
   void _bluetoothScanStart() {
-    _bleRepository.startScan().then((value) {
-      _bleRepository.bluetoothSubscription.onData((scanResult) {
+    _bluetoothRepository.startScan().then((value) {
+      _bluetoothRepository.bluetoothSubscription.onData((scanResult) {
         final BluetoothModel blueModel = BluetoothModel(scanResult);
 
         if (scanResult.advertisementData.localName != null &&
@@ -42,13 +44,13 @@ class BlueBloc extends Bloc<BlueBlocEvent, BlueBlocState> {
           this.add(FindDeviceEvent(blueModel));
         }
       });
-      _bleRepository.bluetoothSubscription.onDone(() => this.add(StartBlueEvent()));
+      _bluetoothRepository.bluetoothSubscription.onDone(() => this.add(StartBlueEvent()));
     }
     );
   }
 
-  void _bluetoothScanStop() => _bleRepository.stopScan();
-
+  void _bluetoothScanStop() => _bluetoothRepository.stopScan();
+  
   _connectedDevice(BluetoothModel bluetoothModel) {
 
   }

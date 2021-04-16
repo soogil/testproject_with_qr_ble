@@ -6,7 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 const int searchBluetoothDuration = 20000;
 
-class BleRepository {
+class BluetoothRepository {
   final FlutterBlue _flutterBlue = FlutterBlue.instance;
   final StreamController _bluetoothController = StreamController();
   final StreamController _bluetoothStateController = StreamController();
@@ -38,6 +38,6 @@ class BleRepository {
   Future bluetoothState() async => _flutterBlue.state.listen((event) {  // 블루투스 on off 체크
     _bluetoothStateController.add(event);
   });
-  
+
   StreamSubscription get bluetoothSubscription => _subscription;
 }

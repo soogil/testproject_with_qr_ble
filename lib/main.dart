@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testproject_with_qr_ble/bloc/ble/blue_bloc.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/blue_bloc.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_bloc.dart';
 import 'package:testproject_with_qr_ble/page/bluetooth_device_list.page.dart';
 
 void main() {
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       ),
       home: MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => BlueBloc())
+            BlocProvider(create: (_) => BlueBloc()),
+            BlocProvider(create: (_) => BlueEnableBloc())
           ],
           child: BluetoothDeviceListPage()
       ),

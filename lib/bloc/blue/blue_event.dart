@@ -12,3 +12,4 @@ class FindDeviceEvent extends BlueBlocEvent {
 
   final BluetoothModel bleModel;
 }
+class BluetoothEnableEvent extends BlueBlocEvent {}
