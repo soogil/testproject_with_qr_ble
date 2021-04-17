@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 abstract class BlueEnableBlocState {
-  const BlueEnableBlocState({@required isBluetoothEnable})
-      : this.isBluetoothEnable = isBluetoothEnable ?? true;
+  BlueEnableBlocState({@required isBluetoothEnabled})
+      : this.isBluetoothEnabled = isBluetoothEnabled ?? true;
 
-  final bool isBluetoothEnable;
+  bool isBluetoothEnabled;
 }
 class UseBluetoothState extends BlueEnableBlocState {
-  UseBluetoothState(bool isBluetoothEnable) : super(isBluetoothEnable: isBluetoothEnable);
+  UseBluetoothState({bool isBluetoothEnabled}) : super(isBluetoothEnabled: isBluetoothEnabled);
 }

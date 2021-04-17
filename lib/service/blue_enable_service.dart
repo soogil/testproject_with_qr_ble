@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bluetooth_plugin/bluetooth_plugin.dart';
 
 class BluetoothEnableService {
@@ -6,14 +8,30 @@ class BluetoothEnableService {
   factory BluetoothEnableService() => _instance;
 
   BluetoothEnableService._internal() {
-    isEnabledBluetooth.then((value) => _isEnable = value);
+    isBluetoothEnabled.then((value) {
+      _isEnable = value;
+      print('BluetoothEnableService $_isEnable');
+    });
+    BluetoothPlugin.detectingBluetoothStatus(_bluetoothStateController);
+  }
+
+  StreamController _bluetoothStateController = StreamController();
+
+  dispose() {
+    _bluetoothStateController.close();
   }
 
   bool _isEnable;
 
-  Future get useBluetoothEnable => BluetoothPlugin.useBluetooth;
+  Future get changeBluetoothState => BluetoothPlugin.useBluetooth;
 
-  Future get isEnabledBluetooth async => await BluetoothPlugin.isEnabled;
+  Future<bool> get isBluetoothEnabled async => await BluetoothPlugin.isBluetoothEnabled;
+
+  Future<bool> get isLocationEnabled async => await BluetoothPlugin.isLocationEnabled;
+
+  Stream get bluetoothStateStream => _bluetoothStateController.stream;
 
   bool get isEnable => _isEnable;
+
+  static BluetoothEnableService get instance => _instance;
 }

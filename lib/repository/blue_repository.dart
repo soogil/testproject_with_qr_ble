@@ -3,14 +3,14 @@ import 'dart:io';
 
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:testproject_with_qr_ble/service/blue_enable_service.dart';
 
 const int searchBluetoothDuration = 20000;
 
 class BluetoothRepository {
   final FlutterBlue _flutterBlue = FlutterBlue.instance;
-  final StreamController _bluetoothController = StreamController();
-  final StreamController _bluetoothStateController = StreamController();
-  StreamSubscription _subscription;
+
+  StreamSubscription _bluetoothScanSubscription;
 
   Future _checkPermissions() async {
     if (Platform.isAndroid) {
@@ -20,24 +20,21 @@ class BluetoothRepository {
 
       final state = permissionStatus[Permission.location];
       print('_checkPermissions $state');
-      
+
       return await Permission.location.request().isGranted;
     }
   }
 
   dispose() {
-    _bluetoothController.close();
-    _bluetoothStateController.close();
+    _bluetoothScanSubscription.cancel();
   }
+  
+  Stream get bluetoothStateSubscription => BluetoothEnableService.instance.bluetoothStateStream;
 
-  Future stopScan() async => await _subscription.cancel().then((value) => _flutterBlue.stopScan());
+  Future stopScan() async => await _bluetoothScanSubscription.cancel().then((value) => _flutterBlue.stopScan());
 
-  Future startScan() => _checkPermissions().then((isGranted) => _subscription =
+  Future startScan() => _checkPermissions().then((isGranted) => _bluetoothScanSubscription =
       _flutterBlue.scan(timeout: Duration(milliseconds: 20000)).listen((event) { }));
 
-  Future bluetoothState() async => _flutterBlue.state.listen((event) {  // 블루투스 on off 체크
-    _bluetoothStateController.add(event);
-  });
-
-  StreamSubscription get bluetoothSubscription => _subscription;
+  StreamSubscription get bluetoothScanSubscription => _bluetoothScanSubscription;
 }
