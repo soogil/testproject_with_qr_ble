@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:testproject_with_qr_ble/model/BleModel.dart';
+import 'package:testproject_with_qr_ble/model/BluetoothModel.dart';
 
 enum BlueScanState {
   scanning,

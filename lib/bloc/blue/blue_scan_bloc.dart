@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testproject_with_qr_ble/bloc/blue/blue_scan_event.dart';
 import 'package:testproject_with_qr_ble/bloc/blue/blue_scan_state.dart';
-import 'package:testproject_with_qr_ble/model/BleModel.dart';
+import 'package:testproject_with_qr_ble/model/BluetoothModel.dart';
 import 'package:testproject_with_qr_ble/repository/blue_repository.dart';
 import 'package:testproject_with_qr_ble/service/blue_enable_service.dart';
 
