@@ -14,7 +14,7 @@ class QRScreenPage extends StatefulWidget {
 
 class _QRScreenPageState extends State<QRScreenPage> {
 
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
   QRBloc _qrBloc;
 
   @override
@@ -62,7 +62,7 @@ class _QRScreenPageState extends State<QRScreenPage> {
     return Expanded(
       flex: 4,
       child: QRView(
-        key: qrKey,
+        key: _qrKey,
         onQRViewCreated: (controller) {
           _qrBloc.controller = controller;
         },
@@ -87,7 +87,15 @@ class _QRScreenPageState extends State<QRScreenPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text(state.resultText),
+                  Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          state.resultText,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

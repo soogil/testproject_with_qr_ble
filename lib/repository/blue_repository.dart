@@ -13,15 +13,25 @@ class BluetoothRepository {
   StreamSubscription _bluetoothScanSubscription;
 
   Future _checkPermissions() async {
-    if (Platform.isAndroid) {
-      Map<Permission, PermissionStatus> permissionStatus = await [
-        Permission.location,
-      ].request();
+    final permissionList = [
+      Permission.location,
+      Permission.camera,
+    ];
 
+    if (Platform.isAndroid) {
+      Map<Permission, PermissionStatus> permissionStatus = await permissionList.request();
+
+      final states = permissionStatus.values.toList();
       final state = permissionStatus[Permission.location];
       print('_checkPermissions $state');
+      print('_checkPermissions $states');
 
-      return await Permission.location.request().isGranted;
+      bool isGranted = true;
+      permissionList.forEach((element) async {
+        isGranted ^= await element.request().isGranted;
+      });
+
+      return isGranted;
     }
   }
 
