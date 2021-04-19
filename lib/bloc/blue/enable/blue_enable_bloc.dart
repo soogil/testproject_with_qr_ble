@@ -30,7 +30,5 @@ class BlueEnableBloc extends Bloc<BlueEnableBlocEvent, BlueEnableBlocState> {
     }
   }
 
-  dispose() {
-    _bluetoothStateSubscription.cancel();
-  }
+  dispose() => _bluetoothStateSubscription.cancel();
 }

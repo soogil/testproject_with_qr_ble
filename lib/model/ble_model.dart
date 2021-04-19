@@ -1,22 +1,22 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_blue/flutter_blue.dart';
+import 'package:flutter_ble_lib/flutter_ble_lib.dart';
 
-class BluetoothModel extends Equatable {
-  BluetoothModel(ScanResult scanResult)
-      : this.id = scanResult.device.id.toString(),
-        this.deviceName = scanResult.device.name == null ||
-            scanResult.device.name  == '' ? 'Unknown' : scanResult.device.name,
+class BleModel extends Equatable {
+  BleModel(ScanResult scanResult)
+      : this.id = scanResult.peripheral.identifier,
+        this.deviceName = scanResult.peripheral.name ??
+            scanResult.advertisementData.localName ?? 'Unknown',
         this._rssi = scanResult.rssi,
         this.isConnected = false,
         this.advertisementData = scanResult.advertisementData,
-        this.bluetoothDevice = scanResult.device;
+        this.peripheral = scanResult.peripheral;
 
   final String id;
   final String deviceName;
   final int _rssi;
   final bool isConnected;
   final AdvertisementData advertisementData;
-  final BluetoothDevice bluetoothDevice;
+  final Peripheral peripheral;
 
   String get rssi => _rssi.toString();
 

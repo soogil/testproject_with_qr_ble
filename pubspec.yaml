@@ -11,14 +11,21 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.0
-  qr_code_scanner: ^0.3.5
-  permission_handler: ^5.1.0
   equatable: 1.2.6
   flutter_bloc:
-  flutter_blue: 0.7.3
+
+# permission plugin
+  permission_handler: ^5.1.0
+
+# qr_scan plugin
+  qr_code_scanner: ^0.3.5
+
+# bluetooth plugin
   bluetooth_plugin:
     path: ../flutter/bluetooth_plugin
-  bluetooth_enable:
+  flutter_blue: 0.7.3
+  flutter_ble_lib:
+    path: ../flutter_ble
 
 dev_dependencies:
   flutter_test:

@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testproject_with_qr_ble/bloc/blue/blue_scan_bloc.dart';
-import 'package:testproject_with_qr_ble/bloc/blue/blue_scan_event.dart';
-import 'package:testproject_with_qr_ble/bloc/blue/blue_scan_state.dart';
+import 'package:testproject_with_qr_ble/bloc/ble/ble_scan_bloc.dart';
+import 'package:testproject_with_qr_ble/bloc/ble/ble_scan_event.dart';
+import 'package:testproject_with_qr_ble/bloc/ble/ble_scan_state.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/scan/blue_scan_bloc.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/scan/blue_scan_event.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/scan/blue_scan_state.dart';
 import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_bloc.dart';
 import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_event.dart';
 import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_state.dart';
 import 'package:testproject_with_qr_ble/bloc/qr/qr_bloc.dart';
+import 'package:testproject_with_qr_ble/model/ble_model.dart';
 import 'package:testproject_with_qr_ble/model/bluetooth_model.dart';
 import 'package:testproject_with_qr_ble/page/qr_screen.page.dart';
+import 'package:testproject_with_qr_ble/service/permission_service.dart';
 
 
 class BluetoothDeviceListPage extends StatefulWidget {
@@ -20,12 +25,15 @@ class BluetoothDeviceListPage extends StatefulWidget {
 class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
 
   BluetoothScanBloc _scanBloc;
+  BleScanBloc _bleScanBloc;
   BlueEnableBloc _blueEnableBloc;
 
   @override
   void initState() {
-    _scanBloc = BlocProvider.of<BluetoothScanBloc>(context);
+    // _scanBloc = BlocProvider.of<BluetoothScanBloc>(context);
+    PermissionService().checkPermissions();
     _blueEnableBloc = BlocProvider.of<BlueEnableBloc>(context);
+    _bleScanBloc = BlocProvider.of<BleScanBloc>(context);
 
     super.initState();
   }
@@ -34,6 +42,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
   void dispose() {
     _scanBloc.dispose();
     _blueEnableBloc.dispose();
+    _bleScanBloc.dispose();
     super.dispose();
   }
 
@@ -72,23 +81,49 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
   }
 
   Widget _circleProgress() {
-    return BlocBuilder<BluetoothScanBloc, BluetoothScanBlocState>(builder: (context, state) {
-      return state.bluetoothScanState == BlueScanState.scanning ? Center(
+    return BlocBuilder<BleScanBloc, BleScanBlocState>(builder: (context, state) {
+      return state.bleScanState == BlueScanState.scanning ? Center(
         child: CircularProgressIndicator(
           strokeWidth: 2,
           backgroundColor: Colors.white,
         ),
       ) : Container();
     });
+
+    return BlocBuilder<BluetoothScanBloc, BluetoothScanBlocState>(
+        builder: (context, state) {
+          return state.bluetoothScanState == BlueScanState.scanning ? Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              backgroundColor: Colors.white,
+            ),
+          ) : Container();
+        });
   }
 
   Widget _findBleButton() {
+    return BlocBuilder<BleScanBloc, BleScanBlocState>(
+      builder: (context, state) {
+        return TextButton(
+            onPressed: () {
+              _bleScanBloc.add(ScanBleEvent());
+            },
+            child: Text(
+              state.scanText,
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+              ),
+            )
+        );
+      },
+    );
+
     return BlocBuilder<BluetoothScanBloc, BluetoothScanBlocState>(
       builder: (context, state) {
         return TextButton(
             onPressed: () {
               _scanBloc.add(ScanBluetoothEvent());
-              // _bleBloc.add(StartBlueEvent());
             },
             child: Text(
               state.scanText,
@@ -112,6 +147,22 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
   }
 
   Widget _buildBluetoothList(BuildContext context) {
+    return BlocBuilder<BleScanBloc, BleScanBlocState>(
+        builder: (context, state) {
+          if(state is UseLocationServiceState || state is UseBleServiceState) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.notificationText)));
+            });
+          }
+
+          return Expanded(
+            child: ListView.builder(
+                itemCount: state.bleList.length,
+                itemBuilder: (context, index) => _deviceListItem(state.bleList[index])
+            ),
+          );
+        }
+    );
     return BlocBuilder<BluetoothScanBloc, BluetoothScanBlocState>(
         builder: (context, state) {
           if(state is UseLocationServiceState || state is UseBluetoothServiceState) {
@@ -123,7 +174,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
           return Expanded(
             child: ListView.builder(
                 itemCount: state.deviceList.length,
-                itemBuilder: (context, index) => _deviceListItem(state.deviceList[index])
+                itemBuilder: (context, index) => _deviceListItem2(state.deviceList[index])
             ),
           );
         }
@@ -139,7 +190,8 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
             builder: (context, state) {
               if(!state.isBluetoothEnabled) {
                 print('bluetoothEnable ${state.isBluetoothEnabled}');
-                _scanBloc.add(BluetoothEnableEvent());
+                // _scanBloc.add(BluetoothEnableEvent());
+                _bleScanBloc.add(BleEnableEvent());
               }
 
               return Switch(
@@ -151,7 +203,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
       ]);
   }
 
-  Widget _deviceListItem(BluetoothModel bluetoothModel) {
+  Widget _deviceListItem(BleModel bleModel) {
     return Container(
         height: 100,
         child: Center(
@@ -163,16 +215,48 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                      '${bluetoothModel.rssi} ${bluetoothModel.deviceName}'
+                      '${bleModel.rssi} ${bleModel.deviceName}'
                   ),
                   Text(
-                      '${bluetoothModel.id}'
+                      '${bleModel.id}'
                   ),
                 ],
               ),
               ElevatedButton(
-                onPressed: () {},
-                  // onPressed: () => bluetoothModel.bluetoothDevice.connect(
+                  onPressed: () {},
+                  // onPressed: () => bleModel.peripheral.connect(
+                  //   timeout: Duration(milliseconds: 15000)
+                  // ),
+                  child: Text('Connect')
+              )
+            ],
+          ),
+        )
+    );
+  }
+
+  Widget _deviceListItem2(BluetoothModel bleModel) {
+    return Container(
+        height: 100,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                      '${bleModel.rssi} ${bleModel.deviceName}'
+                  ),
+                  Text(
+                      '${bleModel.id}'
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                  onPressed: () {},
+                  // onPressed: () => bleModel.peripheral.connect(
                   //   timeout: Duration(milliseconds: 15000)
                   // ),
                   child: Text('Connect')

@@ -15,13 +15,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.3"
-  bluetooth_enable:
-    dependency: "direct main"
-    description:
-      name: bluetooth_enable
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.1"
   bluetooth_plugin:
     dependency: "direct main"
     description:
@@ -104,6 +97,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_ble_lib:
+    dependency: "direct main"
+    description:
+      path: "../flutter_ble"
+      relative: true
+    source: path
+    version: "2.3.2"
   flutter_bloc:
     dependency: "direct main"
     description:

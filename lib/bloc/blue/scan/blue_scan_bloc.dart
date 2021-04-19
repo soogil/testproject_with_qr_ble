@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:testproject_with_qr_ble/bloc/blue/blue_scan_event.dart';
-import 'package:testproject_with_qr_ble/bloc/blue/blue_scan_state.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/scan/blue_scan_event.dart';
+import 'package:testproject_with_qr_ble/bloc/blue/scan/blue_scan_state.dart';
 import 'package:testproject_with_qr_ble/model/bluetooth_model.dart';
 import 'package:testproject_with_qr_ble/repository/blue_repository.dart';
 import 'package:testproject_with_qr_ble/service/blue_enable_service.dart';
@@ -10,7 +10,9 @@ import 'package:testproject_with_qr_ble/service/blue_enable_service.dart';
 class BluetoothScanBloc extends Bloc<BluetoothScanBlocEvent, BluetoothScanBlocState> {
   BluetoothScanBloc() : super(InitBluetoothScanState());
 
-  final BluetoothRepository _bluetoothRepository = BluetoothRepository();
+  final BluetoothRepository _blueRepo = BluetoothRepository();
+
+  StreamSubscription _blueSubscription;
 
   @override
   Stream<BluetoothScanBlocState> mapEventToState(BluetoothScanBlocEvent event) async* {
@@ -57,25 +59,20 @@ class BluetoothScanBloc extends Bloc<BluetoothScanBlocEvent, BluetoothScanBlocSt
   }
 
   BlueScanState _stopBluetoothScan() {
-    _bluetoothRepository.stopScan();
+    _blueRepo.stopScan();
     return BlueScanState.stop;
   }
   
   void _bluetoothScanStart() {
-    _bluetoothRepository.startScan().then((value) {
-      _bluetoothRepository.bluetoothScanSubscription.onData((scanResult) {
-        final BluetoothModel blueModel = BluetoothModel(scanResult);
+    _blueSubscription = _blueRepo.startScan().listen((scanResult) {
+      final BluetoothModel blueModel = BluetoothModel(scanResult);
 
-        if (scanResult.advertisementData.localName != null
-            && !state.deviceList.contains(blueModel)) { // 일단 id 같으면 추가 안하도록
-          this.add(FindDeviceEvent(blueModel));
-        }
-      });
-      _bluetoothRepository.bluetoothScanSubscription.onDone(() => this.add(ScanBluetoothEvent()));
-    });
+      if (scanResult.advertisementData.localName != null
+          && !state.deviceList.contains(blueModel)) { // 일단 id 같으면 추가 안하도록
+        this.add(FindDeviceEvent(blueModel));
+      }
+    }, onDone: () => this.add(ScanBluetoothEvent()));
   }
 
-  void dispose() {
-    _bluetoothRepository.dispose();
-  }
+  void dispose() => _blueRepo.dispose();
 }
