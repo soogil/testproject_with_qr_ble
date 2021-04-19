@@ -7,7 +7,7 @@ import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_bloc.dart';
 import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_event.dart';
 import 'package:testproject_with_qr_ble/bloc/blue/enable/blue_enable_state.dart';
 import 'package:testproject_with_qr_ble/bloc/qr/qr_bloc.dart';
-import 'package:testproject_with_qr_ble/model/BleModel.dart';
+import 'package:testproject_with_qr_ble/model/bluetooth_model.dart';
 import 'package:testproject_with_qr_ble/page/qr_screen.page.dart';
 
 
@@ -151,7 +151,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
       ]);
   }
 
-  Widget _deviceListItem(BluetoothModel bleModel) {
+  Widget _deviceListItem(BluetoothModel bluetoothModel) {
     return Container(
         height: 100,
         child: Center(
@@ -163,15 +163,18 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                      '${bleModel.rssi} ${bleModel.deviceName}'
+                      '${bluetoothModel.rssi} ${bluetoothModel.deviceName}'
                   ),
                   Text(
-                      '${bleModel.id} '
+                      '${bluetoothModel.id}'
                   ),
                 ],
               ),
               ElevatedButton(
-                  onPressed: () {},
+                onPressed: () {},
+                  // onPressed: () => bluetoothModel.bluetoothDevice.connect(
+                  //   timeout: Duration(milliseconds: 15000)
+                  // ),
                   child: Text('Connect')
               )
             ],
