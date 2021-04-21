@@ -15,7 +15,7 @@ class QRScreenPage extends StatefulWidget {
 class _QRScreenPageState extends State<QRScreenPage> {
 
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
-  QRBloc _qrBloc;
+  QRBloc? _qrBloc;
 
   @override
   void initState() {
@@ -27,9 +27,9 @@ class _QRScreenPageState extends State<QRScreenPage> {
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      _qrBloc.pauseCamera();
+      _qrBloc?.pauseCamera();
     }
-    _qrBloc.resumeCamera();
+    _qrBloc?.resumeCamera();
   }
 
   @override
@@ -64,7 +64,7 @@ class _QRScreenPageState extends State<QRScreenPage> {
       child: QRView(
         key: _qrKey,
         onQRViewCreated: (controller) {
-          _qrBloc.controller = controller;
+          _qrBloc?.controller = controller;
         },
         overlay: QrScannerOverlayShape(
             borderColor: Colors.red,
@@ -104,7 +104,7 @@ class _QRScreenPageState extends State<QRScreenPage> {
                         margin: EdgeInsets.all(8),
                         child: ElevatedButton(
                           onPressed: () {
-                            _qrBloc.pauseCamera();
+                            _qrBloc!.pauseCamera();
                           },
                           child: Text('camera stop', style: TextStyle(fontSize: 15)),
                         ),
@@ -113,7 +113,7 @@ class _QRScreenPageState extends State<QRScreenPage> {
                         margin: EdgeInsets.all(8),
                         child: ElevatedButton(
                           onPressed: () {
-                            _qrBloc.resumeCamera();
+                            _qrBloc!.resumeCamera();
                           },
                           child: Text('camera resume', style: TextStyle(fontSize: 15)),
                         ),

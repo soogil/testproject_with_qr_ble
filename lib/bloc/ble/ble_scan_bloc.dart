@@ -15,7 +15,7 @@ class BleScanBloc extends Bloc<BleScanBlocEvent, BleScanBlocState> {
   final BleRepository _bleRepository = BleRepository();
   final BluetoothEnableService _bleService = BluetoothEnableService.instance;
 
-  StreamSubscription _bleScanSubscription;
+  StreamSubscription? _bleScanSubscription;
 
   @override
   Stream<BleScanBlocState> mapEventToState(BleScanBlocEvent event) async* {
@@ -25,7 +25,7 @@ class BleScanBloc extends Bloc<BleScanBlocEvent, BleScanBlocState> {
       final isBluetoothEnabled = await _bleService.isBluetoothEnabled;
       final isLocationEnabled = await _bleService.isLocationEnabled;
 
-      BlueScanState bleScanState;
+      BlueScanState? bleScanState;
 
       if (isBluetoothEnabled) {
         if (isLocationEnabled) {
@@ -62,7 +62,7 @@ class BleScanBloc extends Bloc<BleScanBlocEvent, BleScanBlocState> {
   }
 
   BlueScanState _stopBluetoothScan() {
-    _bleScanSubscription.cancel();
+    _bleScanSubscription?.cancel();
     return BlueScanState.stop;
   }
 

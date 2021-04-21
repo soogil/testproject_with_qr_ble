@@ -8,8 +8,8 @@ enum BlueScanState {
 
 abstract class BluetoothScanBlocState {
   BluetoothScanBlocState({
-    List<BluetoothModel> deviceList,
-    BlueScanState bluetoothScanState
+    List<BluetoothModel>? deviceList,
+    BlueScanState? bluetoothScanState
   }) : this.deviceList = deviceList ?? [],
         this.bluetoothScanState = bluetoothScanState ?? BlueScanState.stop;
 
@@ -22,11 +22,11 @@ abstract class BluetoothScanBlocState {
 }
 
 class InitBluetoothScanState extends BluetoothScanBlocState {
-  InitBluetoothScanState({List<BluetoothModel> deviceList, BlueScanState bluetoothScanState})
+  InitBluetoothScanState({List<BluetoothModel>? deviceList, BlueScanState? bluetoothScanState})
       : super(deviceList: deviceList, bluetoothScanState: bluetoothScanState);
 }
 class UseLocationServiceState extends BluetoothScanBlocState {
-  UseLocationServiceState({@required List<BluetoothModel> deviceList, @required BlueScanState bluetoothScanState})
+  UseLocationServiceState({@required List<BluetoothModel>? deviceList, @required BlueScanState? bluetoothScanState})
       : super(deviceList: deviceList, bluetoothScanState: bluetoothScanState);
 
   @override
@@ -34,7 +34,7 @@ class UseLocationServiceState extends BluetoothScanBlocState {
 }
 
 class UseBluetoothServiceState extends BluetoothScanBlocState {
-  UseBluetoothServiceState({@required List<BluetoothModel> deviceList, @required BlueScanState bluetoothScanState})
+  UseBluetoothServiceState({@required List<BluetoothModel>? deviceList, @required BlueScanState? bluetoothScanState})
       : super(deviceList: deviceList, bluetoothScanState: bluetoothScanState);
 
   @override

@@ -15,7 +15,7 @@ class BlueEnableBloc extends Bloc<BlueEnableBlocEvent, BlueEnableBlocState> {
 
   final BluetoothEnableService _blueService = BluetoothEnableService.instance;
 
-  StreamSubscription _bluetoothStateSubscription;
+  StreamSubscription? _bluetoothStateSubscription;
 
   @override
   Stream<BlueEnableBlocState> mapEventToState(BlueEnableBlocEvent event) async* {
@@ -30,5 +30,5 @@ class BlueEnableBloc extends Bloc<BlueEnableBlocEvent, BlueEnableBlocState> {
     }
   }
 
-  dispose() => _bluetoothStateSubscription.cancel();
+  dispose() => _bluetoothStateSubscription?.cancel();
 }

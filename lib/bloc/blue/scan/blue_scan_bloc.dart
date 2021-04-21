@@ -12,8 +12,6 @@ class BluetoothScanBloc extends Bloc<BluetoothScanBlocEvent, BluetoothScanBlocSt
 
   final BluetoothRepository _blueRepo = BluetoothRepository();
 
-  StreamSubscription _blueSubscription;
-
   @override
   Stream<BluetoothScanBlocState> mapEventToState(BluetoothScanBlocEvent event) async* {
     if (event is InitBluetoothScanEvent) {
@@ -64,11 +62,10 @@ class BluetoothScanBloc extends Bloc<BluetoothScanBlocEvent, BluetoothScanBlocSt
   }
   
   void _bluetoothScanStart() {
-    _blueSubscription = _blueRepo.startScan().listen((scanResult) {
+    _blueRepo.startScan().listen((scanResult) {
       final BluetoothModel blueModel = BluetoothModel(scanResult);
 
-      if (scanResult.advertisementData.localName != null
-          && !state.deviceList.contains(blueModel)) { // 일단 id 같으면 추가 안하도록
+      if (!state.deviceList.contains(blueModel)) { // 일단 id 같으면 추가 안하도록
         this.add(FindDeviceEvent(blueModel));
       }
     }, onDone: () => this.add(ScanBluetoothEvent()));

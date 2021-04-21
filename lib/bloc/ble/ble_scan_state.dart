@@ -6,8 +6,8 @@ import 'package:testproject_with_qr_ble/model/ble_model.dart';
 
 abstract class BleScanBlocState {
   BleScanBlocState({
-    List<BleModel> bleList,
-    BlueScanState bleScanState
+    List<BleModel>? bleList,
+    BlueScanState? bleScanState
   }) : this.bleList = bleList ?? [],
         this.bleScanState = bleScanState ?? BlueScanState.stop;
 
@@ -20,11 +20,11 @@ abstract class BleScanBlocState {
 }
 
 class InitBleScanState extends BleScanBlocState {
-  InitBleScanState({List<BleModel> bleList, BlueScanState bleScanState})
+  InitBleScanState({List<BleModel>? bleList, BlueScanState? bleScanState})
       : super(bleList: bleList, bleScanState: bleScanState);
 }
 class UseBleLocationServiceState extends BleScanBlocState {
-  UseBleLocationServiceState({@required List<BleModel> bleList, @required BlueScanState bleScanState})
+  UseBleLocationServiceState({@required List<BleModel>? bleList, @required BlueScanState? bleScanState})
       : super(bleList: bleList, bleScanState: bleScanState);
 
   @override
@@ -32,7 +32,7 @@ class UseBleLocationServiceState extends BleScanBlocState {
 }
 
 class UseBleServiceState extends BleScanBlocState {
-  UseBleServiceState({@required List<BleModel> bleList, @required BlueScanState bleScanState})
+  UseBleServiceState({@required List<BleModel>? bleList, @required BlueScanState? bleScanState})
       : super(bleList: bleList, bleScanState: bleScanState);
 
   @override

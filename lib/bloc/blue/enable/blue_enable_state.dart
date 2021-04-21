@@ -7,5 +7,5 @@ abstract class BlueEnableBlocState {
   bool isBluetoothEnabled;
 }
 class UseBluetoothState extends BlueEnableBlocState {
-  UseBluetoothState({bool isBluetoothEnabled}) : super(isBluetoothEnabled: isBluetoothEnabled);
+  UseBluetoothState({bool? isBluetoothEnabled}) : super(isBluetoothEnabled: isBluetoothEnabled);
 }

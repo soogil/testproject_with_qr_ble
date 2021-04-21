@@ -4,26 +4,26 @@ description: testproject_with_qr_ble
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^1.0.0
-  equatable: 1.2.6
-  flutter_bloc:
+  equatable: 2.0.0
+  flutter_bloc: ^7.0.0
 
 # permission plugin
   permission_handler: ^5.1.0
 
 # qr_scan plugin
-  qr_code_scanner: ^0.3.5
+  qr_code_scanner: ^0.4.0
 
 # bluetooth plugin
   bluetooth_plugin:
     path: ../flutter/bluetooth_plugin
-  flutter_blue: 0.7.3
+  flutter_blue: 0.8.0
   flutter_ble_lib:
     path: ../flutter_ble
 

@@ -7,20 +7,20 @@ import 'package:testproject_with_qr_ble/bloc/qr/qr_state.dart';
 class QRBloc extends Bloc<QREvent, QRState> {
   QRBloc() : super(InitQrScreenState(null));
 
-  QRViewController _qrViewController;
+  QRViewController? _qrViewController;
 
   @override
   Stream<QRState> mapEventToState(QREvent event) async* {
     if (event is InitQRScreenEvent) {
       yield InitQrScreenState(null);
     } else if(event is SendResultQREvent) {
-      yield ReceiveQRState(result: event.result);
+      yield ReceiveQRState(event.result);
     }
   }
 
-  void pauseCamera() async => await _qrViewController.pauseCamera();
+  void pauseCamera() async => await _qrViewController?.pauseCamera();
 
-  void resumeCamera() async  => await _qrViewController.resumeCamera();
+  void resumeCamera() async  => await _qrViewController?.resumeCamera();
 
   void dispose() => _qrViewController?.dispose();
 
@@ -28,10 +28,10 @@ class QRBloc extends Bloc<QREvent, QRState> {
     _qrViewController = controller;
     this.add(InitQRScreenEvent());
 
-    _qrViewController.scannedDataStream.listen((result) {
+    _qrViewController?.scannedDataStream.listen((result) {
       this.add(SendResultQREvent(result));
     });
   }
 
-  QRViewController get controller => _qrViewController;
+  QRViewController get controller => _qrViewController!;
 }

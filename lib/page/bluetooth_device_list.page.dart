@@ -24,9 +24,9 @@ class BluetoothDeviceListPage extends StatefulWidget {
 
 class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
 
-  BluetoothScanBloc _scanBloc;
-  BleScanBloc _bleScanBloc;
-  BlueEnableBloc _blueEnableBloc;
+  BluetoothScanBloc? _scanBloc;
+  BleScanBloc? _bleScanBloc;
+  BlueEnableBloc? _blueEnableBloc;
 
   @override
   void initState() {
@@ -40,9 +40,9 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
 
   @override
   void dispose() {
-    _scanBloc.dispose();
-    _blueEnableBloc.dispose();
-    _bleScanBloc.dispose();
+    _scanBloc?.dispose();
+    _blueEnableBloc?.dispose();
+    _bleScanBloc?.dispose();
     super.dispose();
   }
 
@@ -54,7 +54,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
     );
   }
 
-  Widget _appbar(BuildContext context) => AppBar(
+  PreferredSizeWidget _appbar(BuildContext context) => AppBar(
     title: Text(
       'AppBar',
     ),
@@ -106,7 +106,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
       builder: (context, state) {
         return TextButton(
             onPressed: () {
-              _bleScanBloc.add(ScanBleEvent());
+              _bleScanBloc!.add(ScanBleEvent());
             },
             child: Text(
               state.scanText,
@@ -123,7 +123,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
       builder: (context, state) {
         return TextButton(
             onPressed: () {
-              _scanBloc.add(ScanBluetoothEvent());
+              _scanBloc!.add(ScanBluetoothEvent());
             },
             child: Text(
               state.scanText,
@@ -150,7 +150,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
     return BlocBuilder<BleScanBloc, BleScanBlocState>(
         builder: (context, state) {
           if(state is UseLocationServiceState || state is UseBleServiceState) {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
               Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.notificationText)));
             });
           }
@@ -166,7 +166,7 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
     return BlocBuilder<BluetoothScanBloc, BluetoothScanBlocState>(
         builder: (context, state) {
           if(state is UseLocationServiceState || state is UseBluetoothServiceState) {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
               Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.notificationText)));
             });
           }
@@ -191,13 +191,13 @@ class _BluetoothDeviceListPageState extends State<BluetoothDeviceListPage> {
               if(!state.isBluetoothEnabled) {
                 print('bluetoothEnable ${state.isBluetoothEnabled}');
                 // _scanBloc.add(BluetoothEnableEvent());
-                _bleScanBloc.add(BleEnableEvent());
+                _bleScanBloc!.add(BleEnableEvent());
               }
 
               return Switch(
                   value: state.isBluetoothEnabled,
                   onChanged: (toggle) =>
-                      _blueEnableBloc.add(UseBluetoothEvent())
+                      _blueEnableBloc!.add(UseBluetoothEvent())
               );}
         ),
       ]);
